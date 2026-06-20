@@ -1,0 +1,30 @@
+# SatEnhance AI - Training Configuration
+# Central place for all tunable parameters. Avoid hardcoding values in code.
+
+data:
+  raw_dir: "data/raw/uc_merced"        # downloaded HR images live here
+  processed_dir: "data/processed"      # train/val/test split lists
+  hr_image_size: 256                   # native size of UC Merced images
+  scale_factor: 4                      # 2 or 4 -- set via this single source of truth
+  train_split: 0.8
+  val_split: 0.1
+  test_split: 0.1
+  seed: 42
+
+degradation:
+  gaussian_blur_kernel: 5
+  gaussian_blur_sigma_range: [0.2, 2.0]   # randomized per-sample for augmentation variety
+  noise_std_range: [0.0, 0.05]            # gaussian sensor noise, applied on [0,1] scale
+  jpeg_quality_range: [60, 100]           # simulate compression artifacts
+  apply_jpeg_compression: true
+
+training:
+  batch_size: 16
+  num_workers: 2          # keep low on Colab/Kaggle to avoid worker crashes
+  learning_rate: 0.0002
+  epochs: 50
+  checkpoint_every: 5
+  checkpoint_dir: "checkpoints"
+  resume_from_checkpoint: null   # set to a path to resume after Colab disconnect
+
+device: "cuda"   # falls back to cpu automatically if unavailable
